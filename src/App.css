@@ -1,0 +1,491 @@
+/* --- NIJJU CYBER-NOIR: LAYOUT POLISH & MODAL FIX --- */
+:root {
+    --primary-cyan: #00d2ff;
+    --primary-dark: #0088ff;
+    --bg-noir: #020617;
+    --bg-card: rgba(15, 23, 42, 0.4);
+    --bg-gradient: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+    --neon-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+    --glass-border: rgba(0, 210, 255, 0.15);
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+    --oc-bg: #020617;
+    --oc-header: #0f172a;
+    --oc-border: #1e293b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text-main);
+    background: var(--bg-noir);
+    overflow-x: hidden;
+}
+
+/* --- HOME PAGE --- */
+.homePageWrapper {
+    background: var(--bg-noir);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.homePageWrapper::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.05) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.animationContainer {
+    margin-bottom: 2rem;
+    z-index: 2;
+}
+
+.characterCrop {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    border: 3px solid var(--glass-border);
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.mascotImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: floating 4s infinite ease-in-out;
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.formWrapper {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 4rem;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.mainLabel {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to bottom, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.inputBox {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #1e293b;
+    padding: 1.2rem;
+    border-radius: 14px;
+    color: #fff;
+    margin-bottom: 1.2rem;
+    outline: none;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+}
+
+.inputBox:focus {
+    border-color: var(--primary-cyan);
+    background: rgba(0, 210, 255, 0.05);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+}
+
+.joinBtn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary-cyan) 0%, #0088ff 100%);
+    color: #fff;
+    font-weight: 800;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 136, 255, 0.3);
+}
+
+.joinBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 136, 255, 0.4);
+    filter: brightness(1.1);
+}
+
+/* --- LANGUAGE SELECTION --- */
+.selectionWrapper {
+    background: var(--bg-noir);
+    min-height: 100vh;
+    padding: 80px 20px;
+    position: relative;
+}
+
+.selectionWrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.02) 1px, transparent 0);
+    background-size: 60px 60px;
+    pointer-events: none;
+}
+
+.selectionContainer {
+    max-width: 1300px;
+    margin: 0 auto;
+    z-index: 1;
+    position: relative;
+}
+
+.searchBox {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--oc-border);
+    padding: 18px 28px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    outline: none;
+    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.searchBox:focus {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
+}
+
+.languageGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.languageCard {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    padding: 15px 25px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.languageCard:hover {
+    background: rgba(0, 210, 255, 0.05);
+    border-color: var(--primary-cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* --- EDITOR PAGE --- */
+.ocEditorMainContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #020617;
+}
+
+.ocTopNav {
+    height: 64px;
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    flex-shrink: 0;
+}
+
+.ocBrand {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.ocBrand span {
+    color: var(--primary-cyan);
+}
+
+.ocEditorContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.ocUtilityBar {
+    height: 54px;
+    background: #0b0f1a;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+.ocRightActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ocUtilityAction {
+    background: #1e293b;
+    color: var(--primary-cyan);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(0, 210, 255, 0.1);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.ocUtilityAction:hover {
+    background: rgba(0, 210, 255, 0.05);
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
+}
+
+.ocUtilityAction.primary {
+    background: var(--primary-cyan);
+    color: #020617;
+    border: none;
+}
+
+.ocUtilityAction.primary:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+}
+
+.ocTabInput {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    outline: none;
+    width: 100px;
+    text-align: center;
+}
+
+.ocWorkspace {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 450px;
+    overflow: hidden;
+}
+
+.ocEditorPane {
+    height: 100%;
+    border-right: 1px solid #1e293b;
+    overflow: hidden;
+}
+
+/* --- CONSOLE PANE RECONSTRUCTION --- */
+.ocConsolePane {
+    display: flex;
+    flex-direction: column;
+    background: #020617;
+    height: 100%;
+    overflow: hidden;
+}
+
+.ocConsoleSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 1px solid #1e293b;
+    min-height: 0;
+}
+
+.ocConsoleSection:last-child {
+    border-bottom: none;
+}
+
+.ocConsoleHeader {
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.ocStdinArea, .ocOutputArea {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+    overflow-y: auto;
+}
+
+.ocStdinArea:focus {
+    border-color: var(--primary-cyan);
+}
+
+.ocOutputArea {
+    white-space: pre-wrap;
+    background: #040813;
+}
+
+/* --- MODAL RECONSTRUCTION --- */
+.ocModalOverlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ocLanguageModal {
+    background: #0f172a;
+    width: 600px;
+    max-height: 80vh;
+    border-radius: 20px;
+    border: 1px solid #1e293b;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+.ocModalHeader {
+    padding: 20px;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ocModalHeader h3 {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.ocModalSearch {
+    padding: 15px;
+}
+
+.ocModalSearch input {
+    width: 100%;
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 12px 20px;
+    border-radius: 10px;
+    color: #fff;
+    outline: none;
+}
+
+.ocModalTabs {
+    display: flex;
+    gap: 10px;
+    padding: 0 15px 15px;
+    overflow-x: auto;
+}
+
+.ocModalGridContainer {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 15px 15px;
+}
+
+.ocModalGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.ocGridItem {
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid #1e293b;
+    padding: 12px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.2s;
+}
+
+.ocGridItem:hover {
+    background: #1e293b;
+    border-color: var(--primary-cyan);
+}
+
+.ocGridIcon {
+    font-size: 1.2rem;
+}
+
+.ocGridName {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.ocGridItem:hover .ocGridName {
+    color: #fff;
+}
+
+/* --- OTHER --- */
+.ocUserOverlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 210, 255, 0.1);
+    z-index: 10;
+}
