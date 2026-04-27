@@ -117,7 +117,8 @@ const EditorPage = () => {
 
         setOutput('Executing code...\n\n');
         try {
-            const response = await fetch('http://localhost:5000/execute', {
+            const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
+            const response = await fetch(`${backendUrl}/execute`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
