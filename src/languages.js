@@ -68,7 +68,7 @@ export const languages = [
     // Databases - 20 items
     { name: 'MySQL', icon: '🐬', mode: 'text/x-mysql', category: 'Databases', color: '#4479A1' },
     { name: 'PostgreSQL', icon: '🐘', mode: 'text/x-postgres', category: 'Databases', color: '#336791' },
-    { name: 'MongoDB', icon: '🍃', mode: 'javascript', category: 'Databases', icon: '🍃', color: '#47A248' },
+    { name: 'MongoDB', icon: '🍃', mode: 'javascript', category: 'Databases', color: '#47A248' },
     { name: 'Oracle', icon: 'O', mode: 'text/x-plsql', category: 'Databases', color: '#F80000' },
     { name: 'Redis', icon: 'R', mode: 'text/x-redis', category: 'Databases', color: '#DC382D' },
     { name: 'SQLite', icon: '☁', mode: 'text/x-sql', category: 'Databases', color: '#003B57' },

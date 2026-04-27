@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -87,7 +87,7 @@ const Home = () => {
                         <span style={{ color: '#64748b' }}>No access code? </span>
                         <a
                             onClick={createNewRoom}
-                            href=""
+                            href="#!"
                             style={{ color: '#00d2ff', textDecoration: 'none', fontWeight: '800' }}
                         >
                             Generate New

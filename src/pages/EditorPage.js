@@ -4,7 +4,7 @@ import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import LanguageDropdown from '../components/LanguageDropdown';
-import { languages } from '../languages';
+
 import { initSocket } from '../socket';
 import {
     useLocation,
@@ -90,6 +90,7 @@ const EditorPage = () => {
                 socketRef.current.off('LANGUAGE_CHANGED');
             }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const changeLanguage = (lang) => {

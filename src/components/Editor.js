@@ -46,6 +46,7 @@ const Editor = ({ socketRef, roomId, onCodeChange, language }) => {
             });
         }
         init();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -58,8 +59,11 @@ const Editor = ({ socketRef, roomId, onCodeChange, language }) => {
         }
 
         return () => {
-            socketRef.current.off(ACTIONS.CODE_CHANGE);
+            if (socketRef.current) {
+                socketRef.current.off(ACTIONS.CODE_CHANGE);
+            }
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socketRef.current]);
 
     return <textarea id="realtimeEditor"></textarea>;
