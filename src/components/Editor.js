@@ -50,11 +50,18 @@ const Editor = ({ socketRef, roomId, onCodeChange, language }) => {
     }, []);
 
     useEffect(() => {
+        if (editorRef.current && language) {
+            editorRef.current.setOption('mode', language);
+        }
+    }, [language]);
+
+    useEffect(() => {
         const socket = socketRef.current;
         if (socket) {
             socket.on(ACTIONS.CODE_CHANGE, ({ code }) => {
                 if (code !== null) {
                     editorRef.current.setValue(code);
+                    onCodeChange(code);
                 }
             });
         }

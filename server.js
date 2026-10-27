@@ -29,20 +29,32 @@ app.post('/execute', (req, res) => {
         const fileName = `${uuidV4()}.py`;
         fs.writeFileSync(fileName, code);
         
-        exec(`python ${fileName}`, (error, stdout, stderr) => {
-            fs.unlinkSync(fileName);
+        const child = exec(`python3 ${fileName}`, (error, stdout, stderr) => {
+            if (fs.existsSync(fileName)) {
+                fs.unlinkSync(fileName);
+            }
             if (error) {
                 return res.json({ output: stderr || error.message });
             }
             res.json({ output: stdout });
         });
+
+        if (input) {
+            child.stdin.write(input);
+            child.stdin.end();
+        }
     } else if (language === 'javascript') {
-        exec(`node -e ${JSON.stringify(code)}`, (error, stdout, stderr) => {
+        const child = exec(`node -e ${JSON.stringify(code)}`, (error, stdout, stderr) => {
             if (error) {
                 return res.json({ output: stderr || error.message });
             }
             res.json({ output: stdout });
         });
+
+        if (input) {
+            child.stdin.write(input);
+            child.stdin.end();
+        }
     } else {
         res.json({ output: `Execution for ${language} is coming soon!` });
     }
@@ -83,6 +95,10 @@ io.on('connection', (socket) => {
 
     socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
         socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
+    });
+
+    socket.on('LANGUAGE_CHANGE', ({ roomId, language, languageName }) => {
+        socket.in(roomId).emit('LANGUAGE_CHANGED', { language, languageName });
     });
 
     socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {

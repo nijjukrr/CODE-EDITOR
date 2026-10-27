@@ -7,7 +7,7 @@ const LanguageDropdown = ({ isOpen, onClose, onSelect, currentLanguage }) => {
 
     if (!isOpen) return null;
 
-    const categories = ['All', 'Programming languages', 'Web languages', 'Database languages', 'Other languages'];
+    const categories = ['All', 'Popular', 'Programming', 'Web', 'Databases'];
 
     const filteredLanguages = languages.filter(lang => {
         const matchesSearch = lang.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -48,7 +48,7 @@ const LanguageDropdown = ({ isOpen, onClose, onSelect, currentLanguage }) => {
                                 letterSpacing: '0.5px'
                             }}
                         >
-                            {cat === 'All' ? 'ALL' : cat.split(' ')[0].toUpperCase()}
+                            {cat.toUpperCase()}
                         </button>
                     ))}
                 </div>
