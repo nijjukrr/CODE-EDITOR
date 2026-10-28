@@ -14,8 +14,9 @@ const io = new Server(server, {
 });
 
 const cors = require('cors');
-const { exec } = require('child_process');
+const { execFile } = require('child_process');
 const fs = require('fs');
+const os = require('os');
 const { v4: uuidV4 } = require('uuid');
 
 app.use(cors());
@@ -24,20 +25,25 @@ app.use(express.json());
 
 app.post('/execute', (req, res) => {
     const { language, code, input } = req.body;
-    
+
     if (language === 'python') {
-        const fileName = `${uuidV4()}.py`;
-        fs.writeFileSync(fileName, code);
-        
-        exec(`python ${fileName}`, (error, stdout, stderr) => {
-            fs.unlinkSync(fileName);
-            if (error) {
-                return res.json({ output: stderr || error.message });
+        const filePath = path.join(os.tmpdir(), `${uuidV4()}.py`);
+        fs.writeFile(filePath, code || '', (err) => {
+            if (err) {
+                return res.json({ output: 'Failed to create execution context.' });
             }
-            res.json({ output: stdout });
+            // Use execFile instead of exec to avoid shell interpolation / command injection
+            execFile('python', [filePath], { timeout: 5000 }, (error, stdout, stderr) => {
+                fs.unlink(filePath, () => {});
+                if (error) {
+                    return res.json({ output: stderr || error.message });
+                }
+                res.json({ output: stdout });
+            });
         });
     } else if (language === 'javascript') {
-        exec(`node -e ${JSON.stringify(code)}`, (error, stdout, stderr) => {
+        // Use execFile with node -e to execute JS safely without shell expansion
+        execFile('node', ['-e', code || ''], { timeout: 5000 }, (error, stdout, stderr) => {
             if (error) {
                 return res.json({ output: stderr || error.message });
             }
