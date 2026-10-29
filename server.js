@@ -20,11 +20,19 @@ const os = require('os');
 const { v4: uuidV4 } = require('uuid');
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 // app.use(express.static('build')); // Disabled to avoid ENOENT in dev
 
 app.post('/execute', (req, res) => {
-    const { language, code, input } = req.body;
+    const { language, code, input } = req.body || {};
+
+    if (typeof language !== 'string' || typeof code !== 'string') {
+        return res.status(400).json({ output: 'Invalid or missing language or code parameter.' });
+    }
+
+    if (code.length > 10000 || (input && typeof input === 'string' && input.length > 10000)) {
+        return res.status(400).json({ output: 'Payload length exceeds maximum limit of 10,000 characters.' });
+    }
 
     if (language === 'python') {
         const filePath = path.join(os.tmpdir(), `${uuidV4()}.py`);
