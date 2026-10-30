@@ -35,51 +35,53 @@ const EditorPage = () => {
     useEffect(() => {
         const init = async () => {
             socketRef.current = await initSocket();
-            socketRef.current.on('connect_error', (err) => handleErrors(err));
-            socketRef.current.on('connect_failed', (err) => handleErrors(err));
+            if (socketRef.current) {
+                socketRef.current.on('connect_error', (err) => handleErrors(err));
+                socketRef.current.on('connect_failed', (err) => handleErrors(err));
 
-            function handleErrors(e) {
-                console.log('socket error', e);
-                toast.error('Socket connection failed, try again later.');
-                reactNavigator('/');
-            }
+                function handleErrors(e) {
+                    console.log('socket error', e);
+                    toast.error('Socket connection failed, try again later.');
+                    reactNavigator('/');
+                }
 
-            socketRef.current.emit(ACTIONS.JOIN, {
-                roomId,
-                username: location.state?.username,
-            });
+                socketRef.current.emit(ACTIONS.JOIN, {
+                    roomId,
+                    username: location.state?.username,
+                });
 
-            socketRef.current.on(
-                ACTIONS.JOINED,
-                ({ clients, username, socketId }) => {
-                    if (username !== location.state?.username) {
-                        toast.success(`${username} joined the room.`);
+                socketRef.current.on(
+                    ACTIONS.JOINED,
+                    ({ clients, username, socketId }) => {
+                        if (username !== location.state?.username) {
+                            toast.success(`${username} joined the room.`);
+                        }
+                        setClients(clients);
+                        socketRef.current.emit(ACTIONS.SYNC_CODE, {
+                            code: codeRef.current,
+                            socketId,
+                        });
                     }
-                    setClients(clients);
-                    socketRef.current.emit(ACTIONS.SYNC_CODE, {
-                        code: codeRef.current,
-                        socketId,
-                    });
-                }
-            );
+                );
 
-            socketRef.current.on(
-                ACTIONS.DISCONNECTED,
-                ({ socketId, username }) => {
-                    toast.success(`${username} left the room.`);
-                    setClients((prev) => {
-                        return prev.filter(
-                            (client) => client.socketId !== socketId
-                        );
-                    });
-                }
-            );
+                socketRef.current.on(
+                    ACTIONS.DISCONNECTED,
+                    ({ socketId, username }) => {
+                        toast.success(`${username} left the room.`);
+                        setClients((prev) => {
+                            return prev.filter(
+                                (client) => client.socketId !== socketId
+                            );
+                        });
+                    }
+                );
 
-            socketRef.current.on('LANGUAGE_CHANGED', ({ language, languageName }) => {
-                setCurrentLanguage(language);
-                setCurrentLanguageName(languageName);
-                toast.success(`Broadcaster switched to ${languageName}`);
-            });
+                socketRef.current.on('LANGUAGE_CHANGED', ({ language, languageName }) => {
+                    setCurrentLanguage(language);
+                    setCurrentLanguageName(languageName);
+                    toast.success(`Broadcaster switched to ${languageName}`);
+                });
+            }
         };
         init();
         return () => {
@@ -98,11 +100,13 @@ const EditorPage = () => {
         setCurrentLanguageName(lang.name);
         setIsLanguageModalOpen(false);
         
-        socketRef.current.emit('LANGUAGE_CHANGE', {
-            roomId,
-            language: lang.mode,
-            languageName: lang.name
-        });
+        if (socketRef.current) {
+            socketRef.current.emit('LANGUAGE_CHANGE', {
+                roomId,
+                language: lang.mode,
+                languageName: lang.name
+            });
+        }
         
         toast.success(`Switched to ${lang.name}`);
     };
@@ -254,6 +258,7 @@ const EditorPage = () => {
                                     <iframe 
                                         className="htmlPreview"
                                         title="preview"
+                                        sandbox="allow-scripts"
                                         srcDoc={codeRef.current}
                                         style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
                                     />
