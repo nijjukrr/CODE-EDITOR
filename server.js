@@ -23,17 +23,36 @@ app.use(cors());
 app.use(express.json());
 // app.use(express.static('build')); // Disabled to avoid ENOENT in dev
 
+// Security: Enforce strict limits on code input to prevent memory exhaustion / DoS
+const MAX_CODE_LENGTH = 50000;
+const EXEC_TIMEOUT = 5000;
+const EXEC_MAX_BUFFER = 1024 * 1024; // 1MB buffer limit
+
 app.post('/execute', (req, res) => {
-    const { language, code, input } = req.body;
+    const { language, code, input } = req.body || {};
+
+    if (!language || typeof language !== 'string') {
+        return res.status(400).json({ output: 'Invalid request: language must be a string.' });
+    }
+
+    if (typeof code !== 'string') {
+        return res.status(400).json({ output: 'Invalid request: code must be a string.' });
+    }
+
+    if (code.length > MAX_CODE_LENGTH) {
+        return res.status(413).json({ output: `Payload too large: code exceeds limit of ${MAX_CODE_LENGTH} characters.` });
+    }
+
+    const execOptions = { timeout: EXEC_TIMEOUT, maxBuffer: EXEC_MAX_BUFFER };
 
     if (language === 'python') {
         const filePath = path.join(os.tmpdir(), `${uuidV4()}.py`);
-        fs.writeFile(filePath, code || '', (err) => {
+        fs.writeFile(filePath, code, (err) => {
             if (err) {
-                return res.json({ output: 'Failed to create execution context.' });
+                return res.status(500).json({ output: 'Failed to create execution context.' });
             }
             // Use execFile instead of exec to avoid shell interpolation / command injection
-            execFile('python', [filePath], { timeout: 5000 }, (error, stdout, stderr) => {
+            execFile('python', [filePath], execOptions, (error, stdout, stderr) => {
                 fs.unlink(filePath, () => {});
                 if (error) {
                     return res.json({ output: stderr || error.message });
@@ -43,7 +62,7 @@ app.post('/execute', (req, res) => {
         });
     } else if (language === 'javascript') {
         // Use execFile with node -e to execute JS safely without shell expansion
-        execFile('node', ['-e', code || ''], { timeout: 5000 }, (error, stdout, stderr) => {
+        execFile('node', ['-e', code], execOptions, (error, stdout, stderr) => {
             if (error) {
                 return res.json({ output: stderr || error.message });
             }
@@ -109,4 +128,8 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+if (require.main === module) {
+    server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+}
+
+module.exports = { app, server };
