@@ -255,6 +255,8 @@ const EditorPage = () => {
                                         className="htmlPreview"
                                         title="preview"
                                         srcDoc={codeRef.current}
+                                        // Restrict iframe privileges (prevents accessing parent window, cookies, or localStorage)
+                                        sandbox="allow-scripts"
                                         style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
                                     />
                                 ) : (
