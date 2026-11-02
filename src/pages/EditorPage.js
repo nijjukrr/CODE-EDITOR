@@ -251,9 +251,13 @@ const EditorPage = () => {
                             <div className="ocConsoleHeader">Output:</div>
                             <div className="ocOutputArea">
                                 {output === 'RENDERING_PREVIEW' ? (
+                                    /* Security: Sandbox the untrusted HTML/JS preview.
+                                       Omitting 'allow-same-origin' isolates the iframe in an opaque origin,
+                                       preventing access to parent cookies, localStorage, and DOM. */
                                     <iframe 
                                         className="htmlPreview"
                                         title="preview"
+                                        sandbox="allow-scripts"
                                         srcDoc={codeRef.current}
                                         style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
                                     />
