@@ -251,9 +251,14 @@ const EditorPage = () => {
                             <div className="ocConsoleHeader">Output:</div>
                             <div className="ocOutputArea">
                                 {output === 'RENDERING_PREVIEW' ? (
+                                    /* Security: Sandbox the untrusted HTML/JS preview to prevent XSS.
+                                       Omitting sandbox allows code in srcDoc to access parent window, DOM,
+                                       cookies, and localStorage (session hijacking). allow-scripts allows execution
+                                       while isolating the origin from the parent application. */
                                     <iframe 
                                         className="htmlPreview"
                                         title="preview"
+                                        sandbox="allow-scripts"
                                         srcDoc={codeRef.current}
                                         style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
                                     />
