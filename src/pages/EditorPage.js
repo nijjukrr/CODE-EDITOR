@@ -255,6 +255,7 @@ const EditorPage = () => {
                                         className="htmlPreview"
                                         title="preview"
                                         srcDoc={codeRef.current}
+                                        sandbox="allow-scripts"
                                         style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
                                     />
                                 ) : (
